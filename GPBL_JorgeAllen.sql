@@ -26,6 +26,7 @@ SET time_zone = "+00:00";
 --
 -- Table structure for table `user`
 --
+CREATE Database GPBL_JorgeAllen;
 
 CREATE TABLE `user` (
   `id` int(11) NOT NULL,

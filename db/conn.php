@@ -1,6 +1,6 @@
 <?php 
     $host = 'localhost';
-    $db = 'form';
+    $db = 'GPBL_JorgeAllen';
     $user = 'root';
     $pass = '';
     $charset = 'utf8mb4';

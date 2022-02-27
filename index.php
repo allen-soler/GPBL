@@ -29,6 +29,8 @@ class validations
     {
         if (strlen($data) < 15)
             return ("un minimum 15 caractères");
+        else if (strlen($data) > 250)
+            return ("un maximum de 250 caractères");
     }
     function checkEmail($email, $crud)
     {
@@ -56,9 +58,9 @@ class validations
                             : $_SERVER['REMOTE_ADDR']);;
                     $creatAt = $r['creatAt'];
                     $cnt = intval($r['cnt']) + 1;
-                    var_dump(strval($cnt));
+                    $text = $r['textArea'];
                     //call crud
-                    $isSuccess = $crud->updateDB($id, $fname, $lname, $sex, $email, $birth, $phone, $country, $ip, $creatAt, $cnt);
+                    $isSuccess = $crud->updateDB($id, $fname, $lname, $sex, $email, $birth, $phone, $country, $ip, $creatAt, $cnt, $text);
                     if ($isSuccess)
                         return (1);
                 } else
@@ -73,6 +75,7 @@ $regName = "Registration form";
 $errorMsg = "";
 $errorText = "";
 $errorMail = "";
+$textArea = "";
 if (isset($_POST) && !empty($_POST)) {
     $var = new validations;
     $errorMsg = $var->dateFormat($_POST['dob']);
@@ -93,11 +96,9 @@ if (isset($_POST) && !empty($_POST)) {
             : (isset($_SERVER['HTTP_X_FORWARDED_FOR'])
                 ? $_SERVER['HTTP_X_FORWARDED_FOR']
                 : $_SERVER['REMOTE_ADDR']);;
-        $creatAt;
-        $updateAt;
-        $counter;
+        $text = $_POST['question'];
         //call crud
-        $isSuccess = $crud->insert($fname, $lname, $sex, $email, $birth, $phone, $country, $ip);
+        $isSuccess = $crud->insert($fname, $lname, $sex, $email, $birth, $phone, $country, $ip, $text);
         if ($isSuccess)
             $regName = "Votre demande est validée";
     }

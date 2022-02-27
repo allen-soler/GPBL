@@ -36,12 +36,11 @@ class validations
         while ($r = $results->fetch(PDO::FETCH_ASSOC)) {
             $mail = $r['email'];
             if (strcmp($mail, $email) === 0) {
-                $dateCreation = strtotime($r['creatAt']);
+                $dateCreation = strtotime($r['updateAt']);
                 $dateModified = strtotime(date("Y-m-d H:i:s"));
                 //reste de minutes / 3600s /24h + 1 si dates === dates res 0 
                 $timePass = ($dateCreation - $dateModified) / 3600 / 24 + 1;
                 if ($timePass < 0) {
-                    var_dump($r);
                     $id = $r['id'];
                     $fname = $_POST['firstName'];
                     $lname = $_POST['lastName'];
@@ -61,8 +60,7 @@ class validations
                     //call crud
                     $isSuccess = $crud->updateDB($id, $fname, $lname, $sex, $email, $birth, $phone, $country, $ip, $creatAt, $cnt);
                     if ($isSuccess)
-                        echo "WORKING !!!";
-                    return (1);
+                        return (1);
                 } else
                     return (2);
                 break;
@@ -71,34 +69,37 @@ class validations
         return (0);
     }
 }
-if (isset($_POST)) {
-    if (!empty($_POST)) {
-        $var = new validations;
-        $errorMsg = $var->dateFormat($_POST['dob']);
-        $errorText = $var->len($_POST['question']);
-        $errorMail = $var->checkEmail($_POST['email'], $crud);
-        if (!isset($errorText) && !isset($errorMsg) && $errorMail === 0) {
-            echo "inside";
-            //extract post values from array
-            $fname = $_POST['firstName'];
-            $lname = $_POST['lastName'];
-            $sex = $_POST['flexRadioDefault'];
-            $email = $_POST['email'];
-            //format date for mysql yyyy-mm-dd
-            $birth = date("Y-m-d", strtotime($_POST['dob']));
-            $phone = $_POST['contactNumber'];
-            $country = $_POST['country'];
-            $ip = isset($_SERVER['HTTP_CLIENT_IP'])
-                ? $_SERVER['HTTP_CLIENT_IP']
-                : (isset($_SERVER['HTTP_X_FORWARDED_FOR'])
-                    ? $_SERVER['HTTP_X_FORWARDED_FOR']
-                    : $_SERVER['REMOTE_ADDR']);;
-            $creatAt;
-            $updateAt;
-            $counter;
-            //call crud
-            //$isSuccess = $crud->insert($fname, $lname, $sex, $email, $birth,$phone, $country, $ip);
-        }
+$regName = "Registration form";
+$errorMsg = "";
+$errorText = "";
+$errorMail = "";
+if (isset($_POST) && !empty($_POST)) {
+    $var = new validations;
+    $errorMsg = $var->dateFormat($_POST['dob']);
+    $errorText = $var->len($_POST['question']);
+    $errorMail = $var->checkEmail($_POST['email'], $crud);
+    if (!isset($errorText) && !isset($errorMsg) && $errorMail === 0) {
+        //extract post values from array
+        $fname = $_POST['firstName'];
+        $lname = $_POST['lastName'];
+        $sex = $_POST['flexRadioDefault'];
+        $email = $_POST['email'];
+        //format date for mysql yyyy-mm-dd
+        $birth = date("Y-m-d", strtotime($_POST['dob']));
+        $phone = $_POST['contactNumber'];
+        $country = $_POST['country'];
+        $ip = isset($_SERVER['HTTP_CLIENT_IP'])
+            ? $_SERVER['HTTP_CLIENT_IP']
+            : (isset($_SERVER['HTTP_X_FORWARDED_FOR'])
+                ? $_SERVER['HTTP_X_FORWARDED_FOR']
+                : $_SERVER['REMOTE_ADDR']);;
+        $creatAt;
+        $updateAt;
+        $counter;
+        //call crud
+        $isSuccess = $crud->insert($fname, $lname, $sex, $email, $birth, $phone, $country, $ip);
+        if ($isSuccess)
+            $regName = "Votre demande est validée";
     }
 }
 /*- ID
@@ -116,7 +117,7 @@ if (isset($_POST)) {
 - counter
 */
 ?>
-<h1 class="text-center fw-lighter">Registration form</h1>
+<h1 class="text-center fw-lighter"><?php echo $regName ?></h1>
 <form method="post" action="">
     <div class="form-group">
         <label for="firstName">Prénom</label>
@@ -142,8 +143,10 @@ if (isset($_POST)) {
         <label for="exampleInputEmail1">Email address</label>
         <input required type="email" class="form-control" id="email" name="email" aria-describedby="emailHelp" placeholder="example@example.com" oninvalid="this.setCustomValidity('Votre mail : example@example.com')" onchange="this.setCustomValidity('')">
         <?php
-        if (isset($errorMail) == 2)
-            echo "<span class='text-danger'> $errorMail</span>"
+        if ($errorMail == 1)
+            echo "<span class='text-success'>votre demande a bien été enregistrée</span>";
+        else if ($errorMail == 2)
+            echo "<span class='text-danger'>Email est déjà enregistré </span>";
         ?>
     </div>
     <div class="form-group">

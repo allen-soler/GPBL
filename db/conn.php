@@ -1,8 +1,8 @@
 <?php 
-    $host = 'hdb.myd.infomaniak.com';
+    $host = 'localhost';
     $db = 'GPBL_JorgeAllen';
-    $user = 'hdb_temp_3';
-    $pass = 'Gtmkih4Oxzac';
+    $user = 'root';
+    $pass = '';
     $charset = 'utf8mb4';
 
     $dsn = "mysql:host=$host;dbname=$db;charset=$charset";

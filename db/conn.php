@@ -1,8 +1,8 @@
 <?php 
-    $host = 'localhost';
+    $host = 'hdb.myd.infomaniak.com';
     $db = 'GPBL_JorgeAllen';
-    $user = 'root';
-    $pass = '';
+    $user = 'hdb_temp_3';
+    $pass = 'Gtmkih4Oxzac';
     $charset = 'utf8mb4';
 
     $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
@@ -10,7 +10,6 @@
         $pdo = new PDO($dsn,$user,$pass);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch(PDOException $e){
-        echo"here";
         throw new PDOException($e->getMessage());
     }
     require_once 'crud.php';

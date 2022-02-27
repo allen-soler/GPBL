@@ -40,8 +40,7 @@ CREATE TABLE `user` (
   `creatAt` varchar(100) NOT NULL,
   `updateAt` varchar(100) NOT NULL,
   `cnt` varchar(11) NOT NULL,
-  `textArea` varchar(255) NOT NULL,
-  PRIMARY KEY (id)
+  `textArea` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
